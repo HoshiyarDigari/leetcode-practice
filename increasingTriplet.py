@@ -5,115 +5,64 @@ def increasingTriplet(nums):
         """
         
         # save the list to the right of number being examined
-        right_list = []
-        
-        # find the actual  smallest number in the nums list and the list of numbers to its right
-        for index  in range(len(nums)):
-            # we will store the triplet sequence in the below list
+        right_list = nums
+        max = 0
+
+        for i in range(len(nums)):
+            
+            right_list = nums
             triplet = []
-            #set smallest number to 1st number in the nums list
-            smallest = nums[0] 
-            smallest_index = 0
-            print('loop  ',index, 'of ', len(nums), 'triplet array is ', triplet, 'and numbers list is ', nums)
-            for i in range(len(nums)):
-                if nums[i]<= smallest:
-                    smallest = nums[i]
-                    smallest_index = i
-                    if i != len(nums)-1:
-                         right_list = nums[i:]
-                    else:
-                         right_list =[]
-            triplet.append(smallest)
-            print('the smallest is ', smallest, "index ", smallest_index, 'has ', right_list , 'to its right and triplet is ', triplet)
-            for i in range(1,len(right_list)):
-                # use smallest to store the value of next bigger element in the right_list,if any
-                print('scanning the right list ', right_list)
-                if right_list[i] > smallest:
-                    temp = right_list[i]
-                    triplet.append(temp)
-                    print('found ', temp, 'and added to triplets which is now ', triplet)
-                    #update the smallest in right list
-                    smallest = temp
-                    if len(triplet) == 3:
-                        print('triplet found', triplet)
-                        return True
-            # if we didn't exit, we move on to examining rest of list with the smallest number removed
-            nums.pop(smallest_index)
-        print('no triplet found', triplet)
-        return False
+            print('loop',i, 'of', len(nums), 'number list is ', nums, 'triplet is ', triplet, 'right list is ', right_list)
+            while right_list and max < 15:
+                max+=1
+                smallest, right_list, smallest_index = findSmall(right_list, triplet)
+                if len(triplet)!=0:
+                    if smallest > triplet[-1]:
+                        triplet.append(smallest)
+                        if len(triplet)==3:
+                            print('triplet found', triplet)
+                            return True
+                else:
+                     triplet.append(smallest)
+                     nums.pop(smallest_index)
+                print('function call done : smallest is ', smallest, ' right list is ', right_list, ' triplet is ', triplet)
+        print('no triplets')
+        return False  
 
 
-# def findSmall(list):
-#      for index  in range(len(nums)):
-#         #set smallest number to 1st number in the nums list
-#         smallest = nums[0] 
-#         smallest_index = 0
-#         print('loop  ',index, 'of ', len(nums), 'triplet array is ', triplet, 'and numbers list is ', nums)
-#         for i in range(len(nums)):
-#             if nums[i]<= smallest:
-#                 smallest = nums[i]
-#                 smallest_index = i
-#                 if i != len(nums)-1:
-#                         right_list = nums[i:]
-#                 else:
-#                         right_list =[]
-            
-        
-            
-            
-            
 
-
-#         # find the smallest value and its index
-#         smallest_number = nums[0]
-#         smallest_number_index = 0
-#         currentList = nums
-        
-#         for index in range(len(nums)):
-#             triplet=[]
-#             print('loop', index, 'with currentList', currentList)
-#             smallest_number, smallest_number_index,compareList = smallFinder(currentList, smallest_number_index)
-#             print('the smallest number in this list is ', smallest_number, 'and the list to its right is ', compareList)
-#             if len(compareList)<2:
-                
-#                 currentList.pop(smallest_number_index)
-#                 print('currentList popped', currentList)
-#             else:
-#                  triplet.append(smallest_number)
-#                  print('first else, found a list with 2 or more numbers on the right', triplet, compareList ) 
-#                  for i in range(len(compareList)):
-#                       smallest_number,smallest_number_index, compareList = smallFinder(compareList, smallest_number_index)
-#                       print('smallest number is',smallest_number, 'at index', smallest_number_index,'in the compare list and updated compare list is ', compareList, 'triptlet is ', triplet, 'loop number is ', i)
-#                       if len(compareList)<1:
-#                            break
-#                       else:
-#                         triplet.append(smallest_number)
-#                         print('second else, found a list with 1 or more numbers on the right', triplet, compareList ) 
-#                         for i in range(len(compareList)):
-#                             smallest_number,smallest_number_index, compareList = smallFinder(compareList, smallest_number_index)
-#                             print('smallest number is',smallest_number, 'at index', smallest_number_index,'in the compare list and updated compare list is ', compareList, 'triptlet is ', triplet, 'loop number is ', i)
-                        
-#             if len(triplet) >=3:
-#                  print("there is a triplet")
-#                  return True
-                    
-                    
-# def smallFinder(list,smallest_number_index):
-#     smallest_number = list[0]
-#     smallest_number_index = 0
-#     if len(list) == 1:
-#          return smallest_number, smallest_number_index, []
-#     for index, num in enumerate(list):
-            
-#             if list[index]<smallest_number:
-#                  smallest_number=nums[index]
-#                  smallest_number_index = index
-#                 #  smallest_number_index = index
-#     list_to_the_right_of_smallest_number = list[smallest_number_index+1:] 
-#     return smallest_number,smallest_number_index,list_to_the_right_of_smallest_number
-     
-
+def findSmall(list, triplet):
+     #for index  in range(len(list)):
+        #set smallest number to 1st number in the nums list
+    smallest = list[0] 
+    smallest_index = 0
+    right_list = list
+    for i in range(len(list)):
+        # print('loop line 28  ',i, 'of ', len(list), 'and numbers list is ', list, ' smallest is ', smallest, 'current index values is ', list[i])
+        if not triplet:  
+            if list[i]< smallest:
+                # print('no triplet,updating smallest to ', list[i])
+                smallest = list[i]
+                smallest_index = i
+                if i <= len(list)-2:
+                        right_list = list[i+1:]
+                else:
+                        right_list =[]
+                # print('loop  ',i, 'of ', len(list), 'and smallest number is ', smallest, 'at', smallest_index, 'and  numbers list is ', list)
+        else:
+             if list[i]< smallest and list[i] not in triplet:
+                # print('updating smallest to ', list[i] , triplet[-1])
+                smallest = list[i]
+                smallest_index = i
+                if i <= len(list)-2:
+                        right_list = list[i+1:]
+                else:
+                        right_list =[]
+             else:
+                  right_list = list[1:]
+    
+    return smallest, right_list, smallest_index    
 
 if __name__ == "__main__":
-    nums = [1,5,0,4,1,3]
+    nums = [9,10,5,11,10,9,8]
     increasingTriplet(nums)
