@@ -21,16 +21,8 @@ def compress(chars):
             elif (chars[i] != s[-1]) or (i == length -1) :
                  #print('non repeating character or last character', chars[i], 's =',s, 'count=', count)
                  if count > 1:
-                    # s.append(str(count))
-                    
-                    #print('count was more than 1, appeding it to s s =',s, 'count=', count)
-                    while(count >0):
-                         append_count.append(count%10)
-                         count//=10
-                         #print(append_count, count)
-                    while append_count:
-                         s.append(str(append_count[-1]))
-                         append_count = append_count[:-1]
+                     for digit in str(count):
+                        s.append(digit)
                          
                          
                  count=1
@@ -38,23 +30,14 @@ def compress(chars):
                  #print('reset count and added character to s', chars[i], 's =',s, 'count=', count)  
                  
         if count > 1:
-                    # s.append(str(count))
-                    
-                    #print('count was more than 1, appeding it to s s =',s, 'count=', count)
-                    while(count >0):
-                         append_count.append(count%10)
-                         count//=10
-                         #print(append_count, count)
-                    while append_count:
-                         s.append(str(append_count[-1]))
-                         append_count = append_count[:-1]
-
+            for digit in str(count):
+                 s.append(digit)
+            
         # s.append(str(count))
         #print('done with iterations, added the count to s', chars[i], 's =',s, 'count=', count)
-        for i in range(len(s)):
-             chars.insert(i, s[i]) 
+        chars[:] = s
         
-        #print('chars', chars)
+        print('chars', chars)
         #print(len(s))
 
             
@@ -63,5 +46,5 @@ def compress(chars):
               
 
 if __name__ == "__main__":
-    s = ["a","b","b","b","b","b","b","b","b","b","b","b","b", "c"]
+    s = ["a","a","b","b","b","b","b","b","b","b","b","b","b","b", "c", "c", "c"]
     compress(s)
