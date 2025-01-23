@@ -7,14 +7,20 @@ def maxArea( height):
          this area has the largest width and limited by only the shorter line
          move inwards from the shorter line , to find a taller one. 
          stop when left meets right
+        optimizations:
+        exit early  - if the area possible with current taller line and width , is less than the existing maxArea, we can exit
         """
         left = 0
         right = len(height)-1
         max_area = 0
+        max_area_possible = 0
         while left < right:
-            area = min(height[left],height[right]) * (right -left)
-            if area> max_area:
-                max_area = area
+            current_area = min(height[left],height[right]) * (right -left)
+            current_max_area_possible = max(height[left],height[right]) * (right -left)
+            if max_area_possible > current_max_area_possible:
+                 break
+            if current_area> max_area:
+                max_area = current_area
             if height[left] == min(height[left], height[right]):
                 left+=1
             else:
