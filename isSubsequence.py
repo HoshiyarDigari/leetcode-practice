@@ -18,6 +18,7 @@ def isSubsequence(s, t):
             print('comparing t element ', t[t_index], 'against s element', s[s_index])
             if t[t_index] == s[s_index]:
                 s_index+=1
+                
             t_index+=1
         if s_index== len(s):
             print(True)
