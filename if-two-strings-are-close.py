@@ -15,28 +15,18 @@ def closeStrings(word1, word2):
     frequencies2 ={}
     for char in word2:
         frequencies2[char]=frequencies2.get(char,0)+1
-    #print(frequencies1,'\n', frequencies2)
+    ##print(frequencies1,'\n', frequencies2)
 
     #compare the dictionaries
-    #print(set(frequencies1.keys()), set(frequencies2.keys()))
-    #print((frequencies1.values()), (frequencies2.values()))
+    ##print(set(frequencies1.keys()), set(frequencies2.keys()))
+    ##print((frequencies1.values()), (frequencies2.values()))
     if frequencies1 == frequencies2:
-        print(True)
+        #print(True)
         return True
     # compare keys and values
     if set(frequencies1.keys()) == set(frequencies2.keys()):
-        values2 = list(frequencies2.values())
-        #print('values2', values2)
-        for number in frequencies1.values():
-            #print(number, frequencies1)
-            if number not in values2:
-                #print(False)
-                return False
-            else:
-                values2.remove(number)
-            
-        print(True)
-    print(False)
+       return sorted(frequencies1.values()) == sorted(frequencies2.values())
+    #print(False)
     return False
 if __name__ == "__main__":
     word1 = "cabbba"
