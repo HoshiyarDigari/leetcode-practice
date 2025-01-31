@@ -1,31 +1,34 @@
-def equalPairs(grid):
+def closeStrings(word1, word2):
     """
-    :type grid: List[List[int]]
-    :rtype: int
-    algo:
-    - first row is the column_heads
-    - create a list of the first element of each list in the grid - call it row_heads
-      - check if number in column_heads is in the row_heads?
-       - yes? create list with this numbers index in each of the sublist.
-       - compare if this matches a list in the grid. if yes counter increase by 1 
-       - return counter
+    :type word1: str
+    :type word2: str
+    :rtype: bool
+    algo:'
+    - make frequency dictionaries for both words
+    - if the sets of keys and values in both dictionaries is same, return true else false
+    - it appears that the two words should have same number of total characters and each type of character to be "close"
     """
-    n = len(grid)
-    print('this is', n,'by', n, 'grid')
-    column_heads = grid[0]
-    # create the row_heads
-    row_heads = [grid[x][0] for x in range(n)]
-    print('row heads',row_heads, 'col heads', grid[0])
+    frequencies1 ={}
+    for char in word1:
+        frequencies1[char]=frequencies1.get(char,0)+1
+    
+    frequencies2 ={}
+    for char in word2:
+        frequencies2[char]=frequencies2.get(char,0)+1
+    ##print(frequencies1,'\n', frequencies2)
 
-    count = 0
-    for index, number in enumerate(column_heads):
-        if number in row_heads:
-            temp_list = [grid[x][index] for x in range(n)]
-            print(temp_list)
-            for i in range(n):
-                if temp_list == grid[i]:
-                    count+=1
-    print(count)
+    #compare the dictionaries
+    ##print(set(frequencies1.keys()), set(frequencies2.keys()))
+    ##print((frequencies1.values()), (frequencies2.values()))
+    if frequencies1 == frequencies2:
+        #print(True)
+        return True
+    # compare keys and values
+    if set(frequencies1.keys()) == set(frequencies2.keys()):
+       return sorted(frequencies1.values()) == sorted(frequencies2.values())
+    #print(False)
+    return False
 if __name__ == "__main__":
-    grid = [[3,1,2,2],[1,4,4,5],[2,4,2,2],[2,4,2,2]]
-    equalPairs(grid)
+    word1 = "cabbba"
+    word2 = "aabbss"
+    closeStrings(word1, word2)
