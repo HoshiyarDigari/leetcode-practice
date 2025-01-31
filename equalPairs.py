@@ -14,18 +14,18 @@ def equalPairs(grid):
     print('this is', n,'by', n, 'grid')
     column_heads = grid[0]
     # create the row_heads
-    row_heads = [grid[x][0] for x in range(n)]
+    row_heads = set([grid[x][0] for x in range(n)])
     print('row heads',row_heads, 'col heads', grid[0])
 
     count = 0
     for index, number in enumerate(column_heads):
         if number in row_heads:
-            temp_list = [grid[x][index] for x in range(n)]
-            print(temp_list)
+            temp_tuple = tuple([grid[x][index] for x in range(n)])
+            print(temp_tuple)
             for i in range(n):
-                if temp_list == grid[i]:
+                if temp_tuple == tuple(grid[i]):
                     count+=1
     print(count)
 if __name__ == "__main__":
-    grid = [[3,1,2,2],[1,4,4,5],[2,4,2,2],[2,4,2,2]]
+    grid = [[3,2,1],[1,7,6],[2,7,7]]
     equalPairs(grid)
