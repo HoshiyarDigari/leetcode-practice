@@ -1,3 +1,10 @@
+"""
+algo:
+1. walk through the linkeedlist, build a dictionary for each nodes' val and next pointer. also keep a count of the number of nodes
+2. once size is known, use the dictionary to switch pointers removing the middle element out of the linked list
+
+"""
+
 # Definition for singly-linked list.
 from typing import Optional
 class ListNode:
