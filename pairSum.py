@@ -31,17 +31,38 @@ class ListNode:
 
     
 def pairSum( head: Optional[ListNode]) -> Optional[ListNode]:
-    pass
-        
+    #dump into a dictionary and then use the dictionary to find the twin sums directly without need of link list traversal
+    node = head
+    node_dict = {}
+    size = 0
+    while node:
+        node_dict.update({size:node.val})
+        node = node.next
+        size+=1
+    print(node_dict, 'size is ', size)
 
-    current_node.next = left_node    
-    print('current',current_node,'left',left_node,'right',right_node)
-    #print(head)
+    # now we know the size(n) of the list and we need to find the twin nodes i and (n-1-i)th tuples
+    twin_nodes = set()
+    for i in range(size//2):
+        twin_nodes.add((i, size-1-i))
+    print(twin_nodes)
+
+    # now we know all the twin pairs, look up in dictionary and add their values and return the maximum one
+    pairSum = 0
+    for i,twin in twin_nodes:
+        pairSum = max(pairSum,(node_dict[i] + node_dict[twin]))
+    print(pairSum)
+
+
+
+    
+
+        
 
     
     
 if __name__ == "__main__":
-    val = [1,2,3]
+    val = [1,2,3,4]
     head = None
     for value in val:
         if not head:
