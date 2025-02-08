@@ -1,5 +1,9 @@
 """
 algo:
+- scan through the list. Each scan track current node and its left and right nodes.
+- change current node's next pointer to left_node, that way the direction of arrow is reversed.
+- move the scanner by updating left node to current node, current node to right node and right node to right node's next pointer
+-  
 
 
 """
@@ -30,12 +34,40 @@ class ListNode:
 
     
 def reverseList( head: Optional[ListNode]) -> Optional[ListNode]:
-    # cases for empty list, 1 item or 2 item list
-    pass
+    # base case , empty or 1 item list
+    if not head or not head.next:
+        print(head)
+        return head
+    
+    # we have 3 pointers, left-node, right-node and current-node
+    current_node = head
+    left_node = None
+    right_node = head.next
+    
+    # we scan till the current node is last one, its right-node is None
+
+    while right_node:
+        print('current',current_node,'left',left_node,'right',right_node)
+        #temporary variables to hold left, right and current, we can delete some of them afterwards
+        #temp_right = right_node
+        
+        #update the pointers using the temp variables
+        current_node.next = left_node
+        # move current one place
+        left_node = current_node
+        current_node=right_node
+        right_node = right_node.next
+
+        
+
+    current_node.next = left_node    
+    print('current',current_node,'left',left_node,'right',right_node)
+    #print(head)
+
     
     
 if __name__ == "__main__":
-    val = [1,2,3,4,5,6,7,8]
+    val = [1,2,3]
     head = None
     for value in val:
         if not head:
