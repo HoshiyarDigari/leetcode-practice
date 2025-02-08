@@ -29,11 +29,42 @@ class ListNode:
         return '-->'.join(result)
 
     
-def oddEvenList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-       pass
+def oddEvenList( head: Optional[ListNode]) -> Optional[ListNode]:
+    # cases for empty list, 1 item or 2 item list
+    if not head or not head.next or not head.next.next:
+        print(head)
+        return head
+    
+    # if there are at least 3 items, we have to reorder
 
+    #these will keep track of start of odd and even nodes
+    odd_head = head
+    even_head = head.next
+
+    # these will move through the linked list 
+    odd = head
+    even = head.next
+    
+    while odd and even and even.next:
+        if odd.next:
+            odd.next = odd.next.next
+        even.next = even.next.next
+        
+        odd = odd.next
+        even = even.next
+    
+    
+    odd.next = even_head
+    
+    print(even_head)
+    
+    print(odd_head)
+   
+
+    
+    
 if __name__ == "__main__":
-    val = [1,2,3]
+    val = [1,2,3,4,5,6,7,8]
     head = None
     for value in val:
         if not head:
@@ -53,4 +84,4 @@ if __name__ == "__main__":
 
     
           
-    deleteMiddle(head)
+    oddEvenList(head)
