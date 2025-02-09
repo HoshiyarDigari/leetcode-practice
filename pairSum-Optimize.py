@@ -1,9 +1,7 @@
 """
 algo:
-- create a list with the values in the linked list. 
-- Twins  in even list are the items at front and end of list. 
-- We use front and end pointer to move inwards in the list 
-- we return the max of twin sums
+- we will create a list of prefix sums as we traverse the list.
+
 
 
 """
@@ -23,6 +21,7 @@ class ListNode:
         temp.next=node
         return self
     
+    
     # function to print the linked list
     def __str__(self):
         result = ''
@@ -32,26 +31,17 @@ class ListNode:
             current = current.next
         return '-->'.join(result)
 
-    
+
 def pairSum( head: Optional[ListNode]) -> Optional[ListNode]:
-    #dump into a list and then use the list to find the twin sums directly without need of link list traversal
-    node = head
-    node_list = []
-    while node:
-        node_list.append(node.val)
-        node = node.next
-    print(node_list)
-
-
-    # scan the list from both ends and return the max twin sum
-    pairSum = 0
-    front, end = 0, len(node_list)-1
     
-    while front < end:
-        pairSum=max(pairSum, node_list[front] + node_list[end])
-        front +=1
-        end-=1
-    print(pairSum)
+    # generate list of prefix sums
+    prefixSums=[head.val]
+    current = head.next
+    size = 0
+    while current:
+        prefixSums.append(current.val + prefixSums[-1])
+        print(prefixSums)
+        current = current.next
 
 
 
@@ -62,7 +52,7 @@ def pairSum( head: Optional[ListNode]) -> Optional[ListNode]:
     
     
 if __name__ == "__main__":
-    val = [1,8,3,4,8,9]
+    val = [1,2,3,4]
     head = None
     for value in val:
         if not head:
