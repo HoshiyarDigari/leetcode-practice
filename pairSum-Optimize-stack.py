@@ -1,9 +1,9 @@
 """
 algo:
 - twins are at the end of the list.
-- we will reverse the second half of the list and then add to the first half.
-    - we use slow and fast pointer to get to the middle of the list.
-
+- we creat a stack with the values of first half of the list
+- than we move forward and add pop this stack and add to the current node 
+- in the list(1,2,3,4), stack will be (1, 2), then we move to 3 and pop 2 and add to it, then goes to 4 and pops1 to add to it.
 """
 
 # Definition for singly-linked list.
@@ -31,39 +31,25 @@ class ListNode:
             current = current.next
         return '-->'.join(result)
 
-def reverseList(head:Optional[ListNode])-> Optional[ListNode]:
-    # list is empty or single element
-    if not head or not head.next:
-        return head
-    # 2 or more elements, we use left right and current pointers to reverse pointer direction
-    current = head
-    left = None
-    right = current.next
-
-    while right:
-        print('we are at ', current, 'with left', left , 'and right', right)
-        current.next, left, current, right = left, current, right, right.next
-    current.next = left
-    print('reversed list', current)
-    return (current)
 def pairSum( head: Optional[ListNode]) -> Optional[ListNode]:
     # 
     #slow and fast pointers to get to middle of list, input list is at least 2 items
     slow = head
     fast = head
-
+    stack = list()
     while fast and fast.next:
         print('slow is at ', slow, 'fast is at', fast)
+        #make the stack
+        stack.append(slow.val)
         slow = slow.next
         fast = fast.next.next
     # we reverse the list from the middle, slow is at the middle of the list
-    slow = reverseList(slow)
-    # now the two lists to compare are 
-    print(head, slow)
+   
+    # now the stack is 
+    print(stack, slow)
     pairSum = 0
-    while head and slow:
-        pairSum = max(pairSum, head.val + slow.val)
-        head = head.next
+    while slow:
+        pairSum = max(pairSum, stack.pop() + slow.val)
         slow = slow.next
     print(pairSum)
 
