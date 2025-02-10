@@ -47,7 +47,7 @@ def reverseList( head: Optional[ListNode]) -> Optional[ListNode]:
     # we scan till the current node is last one, its right-node is None
 
     while right_node:
-        print('current',current_node,'left',left_node,'right',right_node)
+        #print('current',current_node,'left',left_node,'right',right_node)
         #temporary variables to hold left, right and current, we can delete some of them afterwards
         #temp_right = right_node
         
@@ -63,6 +63,7 @@ def reverseList( head: Optional[ListNode]) -> Optional[ListNode]:
     current_node.next = left_node    
     print('current',current_node,'left',left_node,'right',right_node)
     #print(head)
+    return current_node
 
     
     
@@ -88,3 +89,4 @@ if __name__ == "__main__":
     
           
     reverseList(head)
+   
