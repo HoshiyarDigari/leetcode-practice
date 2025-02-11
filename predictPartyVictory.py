@@ -4,6 +4,7 @@ def predictPartyVictory(senate: str) -> str:
     complement = {'R':'D', 'D':'R'}
 
     while queue:
+        
        
         for senator in queue:
             # this senator's best plan is to remove senator from other party
