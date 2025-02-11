@@ -10,8 +10,10 @@ class TreeNode:
     
     def __str__(self):
         result=''
-        result+=str(self.left)+'<--'+str(self.val)+'-->'+str(self.right)
-        return ''.join(result)
+        str_left = str(self.left) 
+        str_right = str(self.right)
+        result+='TreeNode{val:'+str(self.val) +',Left:'+str_left + ',Right:'+ str_right
+        return result
 
     # def __str__(self):
     #     left_str = str(self.left) if self.left else "None"
@@ -47,7 +49,7 @@ def list_to_tree(list):
     
         
 if __name__ == "__main__":
-    root = [3,1,4,3,None,1,5]
+    root = [3,9,20,None,None,15,7]
     answer = Solution()
     answer.maxDepth(list_to_tree(root))
 
