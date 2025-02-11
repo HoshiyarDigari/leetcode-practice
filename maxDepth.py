@@ -23,8 +23,19 @@ class TreeNode:
 
 class Solution:
     def maxDepth(self, root: Optional[TreeNode]) -> int:
-        pass
-    
+        """
+        algo:
+        - height of tree is 1 + max of left sub tree and right sub tree
+        - this can go on recursively, till we get to the leafs
+        
+        """
+        # if we are at a leaf, we return 0, this is the base case
+        if not root:
+            return 0
+        
+        height =  1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
+        print(root.val, height)
+        return height
 
 def list_to_tree(list):
     if not list:
@@ -43,13 +54,13 @@ def list_to_tree(list):
             node.right = TreeNode(list[i])
             queue.append(node.right)
         i+=1
-    print(root)
+    # print(root)
     return root 
 
     
         
 if __name__ == "__main__":
-    root = [3,9,20,None,None,15,7]
+    root = [1,None,2]
     answer = Solution()
     answer.maxDepth(list_to_tree(root))
 
