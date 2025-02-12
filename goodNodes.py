@@ -22,12 +22,39 @@ class TreeNode:
 
 
 class Solution:
-    def goodNodes(self, root1: Optional[TreeNode]) -> bool:
+    def goodNodes(self, root: Optional[TreeNode]) -> bool:
         """
         algo:
-        - 
+        - we need to find all the paths in the tree. 
+        - we traverse keeping note of the previous largest in the tree path
+        - if current is higher,it gets added to good nodes
+        - we backtrack upon reaching a leaf
         """
-        pass
+        largest = float('-inf')
+        answer = []
+        # traverse sub trees
+        self.isGoodNode(root,largest,answer)
+        print(answer)
+     
+    
+
+    def isGoodNode(self,node, largest, answer):
+        if not node:
+            return answer
+        if node.val >= largest:
+            print('\nadded node', node)
+            answer.append(node.val)
+            largest = node.val
+        if node.left:
+            self.isGoodNode(node.left, largest, answer)
+        if node.right:
+            self.isGoodNode(node.right, largest, answer)
+        print(answer)
+        return answer
+
+
+
+
     
 
         
@@ -55,7 +82,7 @@ def list_to_tree(list):
     
         
 if __name__ == "__main__":
-    root1 = [3,5,1,6,2,9,8,None,None,7,4]
+    root1 = [3,1,4,3,None,1,5]
     answer = Solution()
     answer.goodNodes(list_to_tree(root1))
 
