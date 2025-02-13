@@ -15,16 +15,12 @@ class TreeNode:
         result+='TreeNode{val:'+str(self.val) +',Left:'+str_left + ',Right:'+ str_right
         return result
 
-    # def __str__(self):
-    #     left_str = str(self.left) if self.left else "None"
-    #     right_str = str(self.right) if self.right else "None"
-    #     return f"{left_str} <-- {self.val} --> {right_str}"
-
-
-class Solution:
-    def pathSum(self, root: Optional[TreeNode], targetSum: int) -> int:
-        print(root, targetSum)
-
+    
+    # equals function
+    def __eq__(self,other):
+        if not isinstance(other, TreeNode):
+            return False # other object is not even the same type of object
+        return id(self) == id(other) 
 
 
 def list_to_tree(list):
@@ -40,18 +36,75 @@ def list_to_tree(list):
             node.left = TreeNode(list[i])
             queue.append(node.left)
         i+=1
-        if list[i]:
-            node.right = TreeNode(list[i])
-            queue.append(node.right)
-        i+=1
+        if i < len(list):
+            if list[i] and i < len(list):
+                node.right = TreeNode(list[i])
+                queue.append(node.right)
+            i+=1
     # print(root)
     return root 
 
     
+
+class Solution:
+    def pathSum(self, root: Optional[TreeNode], targetSum: int) -> int:
+        """
+        Algo:
+        - at the root, we find the remaining =(target - root).
+        - we walk down the tree from the root
+        - update the remaining to remaining - current node
+            - if remaining is 0, we have found a pathSum that equals target. Update count for it
+            - else continue the walk down the tree
+        - when whole tree has been traversed, change root of tree to the roots left and right children
+
+
+        """
+        remaining = targetSum
+        isPathSum = list() # we updat this list with True, everytime we find a pathSum
+        
+        #helper function to walk down the tree
+        def treeWalk (node, remaining, isPathSum, targetSum):
+            # we have nothing to do if we at a None node
+            print('got the node in as ', node)
+            if not node:
+                print('None node exiting')
+                return
+            remaining = remaining - node.val
+            
+            print('\nroot for current search is', node.val, 'remaining is', remaining)
+            
+            if remaining == 0:
+                print('found a pathSum at ', node.val)
+                isPathSum.append(True)
+                #return None
+            
+            
+            print('calling left and right child of node', node.val)
+            treeWalk(node.left, remaining, isPathSum,targetSum)
+            treeWalk(node.right,remaining, isPathSum, targetSum)
+        
+        root_deque = deque([root])
+        
+        while root_deque:
+            
+            current = root_deque.popleft()
+            if current.left:
+                root_deque.append(current.left)
+            if current.right:
+                root_deque.append(current.right)
+            print('\n\n\n CALLING FROM THE WHILE LOOP FOR CURRENT',  current, '\n PATHSUM IS NOW', isPathSum )
+            treeWalk(current, remaining, isPathSum, targetSum)
+            
+        print(isPathSum, 'final answer')
+
+
+
+
+
         
 if __name__ == "__main__":
-    root = [10,5,-3,3,2,None,11,3,-2,None,1]
-    targetSum = 8
+    root = [1,-2,-3,1,3,-2,None,-1]
+    targetSum = -1
     answer = Solution()
     answer.pathSum(list_to_tree(root), targetSum)
 
