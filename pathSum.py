@@ -23,7 +23,7 @@ class TreeNode:
 
 class Solution:
     def pathSum(self, root: Optional[TreeNode], targetSum: int) -> int:
-        pass
+        print(root, targetSum)
 
 
 
