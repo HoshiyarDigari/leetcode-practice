@@ -30,19 +30,27 @@ class Solution:
         - if current is higher,it gets added to good nodes
         - we backtrack upon reaching a leaf
         """
-
-        def isGoodNode(node, largest):
-            if not node:
-                return 0
-            good = 1 if node.val >= largest else 0
-            largest = max(largest, node.val)
-            #traverse sub trees
-            return good + isGoodNode(node.left, largest) + isGoodNode(node.right, largest)
-            
         largest = float('-inf')
-        
+        answer = []
         # traverse sub trees
-        print(isGoodNode(root,largest))
+        self.isGoodNode(root,largest,answer)
+        print(answer)
+        return len(answer)
+     
+    
+
+    def isGoodNode(self,node, largest, answer):
+        if not node:
+            return answer
+        if node.val >= largest:
+            #print('\nadded node', node)
+            answer.append(node.val)
+            largest = node.val
+        if node.left:
+            self.isGoodNode(node.left, largest, answer)
+        if node.right:
+            self.isGoodNode(node.right, largest, answer)
+        return answer
         
      
     
