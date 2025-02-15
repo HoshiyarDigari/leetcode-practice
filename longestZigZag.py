@@ -23,23 +23,27 @@ class TreeNode:
         return id(self) == id(other) 
 
 
-def list_to_tree(list):
-    if not list:
+def list_to_tree(lst):
+    if not lst:
         return None
     
-    root = TreeNode(list[0])
+    root = TreeNode(lst[0])
     queue = deque([root])
     i=1
-    while queue and i < len(list):
+    while queue and i < len(lst):
         node = queue.popleft()
-        if list[i]:
-            node.left = TreeNode(list[i])
+        if lst[i] is not None and i < len(lst):
+            node.left = TreeNode(lst[i])
             queue.append(node.left)
-        i+=1
-        if i < len(list):
-            if list[i] and i < len(list):
-                node.right = TreeNode(list[i])
-                queue.append(node.right)
+            i+=1
+        else:
+            i+=1
+        
+        if lst[i] is not None and i < len(lst):
+            node.right = TreeNode(lst[i])
+            queue.append(node.right)
+            i+=1
+        else:
             i+=1
     # print(root)
     return root 
@@ -47,22 +51,32 @@ def list_to_tree(list):
     
 
 class Solution:
-    def longestZigZag(self, root: Optional[TreeNode]) -> int:
+    def longestZigZag(self,root: Optional[TreeNode]) -> int:
         """
         Algo:
-        - prefix sum of a node  - sum of values from  root to that node
-        - we keep this prefix sum in a dictionary.
-        - when we go down the tree, we update prefix sum of the child to dictionary
-        - a valid path to a node must satisfy:
-            - current sum = target sum
-            - current sum - targetSum = some previous prefix sum
-        - when we backtrack , which is after the node.left and node.right calls, we remove current prefix sum from the dictionary. This way it doesn't impact any other branches
+        - this task is similar to finding the prefix sum
+        - we can walk down the tree with each of the nodes as root and find the longest path seen across the walks.
+        - to optimize, we need a way to reduce the number of walks or get the answer in one walk if possible 
         """
+        path = list()
+        if not root:
+            return 0
+        #helper function for traversing the tree
+        def treeWalk(node:TreeNode):
+            print(node)
+            if not node:
+                return
+            
+            treeWalk(node.left)
+            treeWalk(node.right)
+            
+        treeWalk(root)
+
         
 if __name__ == "__main__":
-    root = [0,1,0]
+    root = [0,2,0]
     targetSum = 1
     answer = Solution()
-    answer.longestZigZag(list_to_tree(root), targetSum)
+    answer.longestZigZag(list_to_tree(root))
 
          
