@@ -50,60 +50,53 @@ class Solution:
     def pathSum(self, root: Optional[TreeNode], targetSum: int) -> int:
         """
         Algo:
-        - at the root, we find the remaining =(target - root).
-        - we walk down the tree from the root
-        - update the remaining to remaining - current node
-            - if remaining is 0, we have found a pathSum that equals target. Update count for it
-            - else continue the walk down the tree
-        - when whole tree has been traversed, change root of tree to the roots left and right children
-
-
+        - prefix sum of a node  - sum of values from  root to that node
+        - we keep this prefix sum in a dictionary.
+        - when we go down the tree, we update prefix sum of the child to dictionary
+        - a valid path to a node must satisfy:
+            - current sum = target sum
+            - current sum - targetSum = some previous prefix sum
+        - when we backtrack , which is after the node.left and node.right calls, we remove current prefix sum from the dictionary. This way it doesn't impact any other branches
         """
+        # this helps us check the case where prefix sum equals targetSum
+        prefixSums = {0:1} 
+        print(prefixSums)
         if not root:
-            return 0
-     
-        count = 0 
+            return 
         
-        #helper function to walk down the tree
-        def treeWalk (node, remaining):
-            nonlocal count  # Allow modification of outer `count`
-            # we have nothing to do if we at a None node
-            print('got the node in as ', node)
+        
+        count = 0 # to count occurences of valid paths
+        # function to do the DFS 
+        def isPathSum(node:TreeNode, prefixSums:dict, sum:int, targetSum:int):
+            nonlocal count # so it can access this count across recursive calls
+            print('\n Examining node', node, 'prefixSums is ', prefixSums)
             if not node:
-                print('None node exiting')
-                return 0
-            remaining = remaining - node.val
+                return
+            current_sum = node.val + sum
+            #add prefix sums to dictionary
             
-            print('\nroot for current search is', node.val, 'remaining is', remaining)
+            if prefixSums.get(current_sum - targetSum, 0) !=0:
+                count+=prefixSums[current_sum -targetSum]
+                print('\n found valid path at ', node.val)
+            # we add this sum to the prefixSums after we have checked above condition. if we do this before the above if, it can lead to issues, specially with edge case of 0 targetSum    
+            prefixSums[current_sum]= prefixSums.get(current_sum,0)+1
+            isPathSum(node.left, prefixSums, current_sum, targetSum)
+            isPathSum(node.right, prefixSums, current_sum, targetSum)
+
+            # when both left and node have been recursed, we are backtracking, we need to remove the prefix Sum now , so it doesn't impact non- linked sub trees
             
-            if remaining == 0:
-                print('found a pathSum at ', node.val)
-                count+=1
-                #return None
-            
-            
-            print('calling left and right child of node', node.val)
-            treeWalk(node.left, remaining)
-            treeWalk(node.right,remaining)
+            if prefixSums[current_sum]==1:
+                del(prefixSums[current_sum])
+            else:
+                prefixSums[current_sum]-=1
+            print('removed current sum at backtrack',node, prefixSums)
         
-       
+        isPathSum(root, prefixSums,0, targetSum)
+        print('count is ', count)
 
-        treeWalk(root,targetSum)
-
-        count = count + self.pathSum(root.left, targetSum) + self.pathSum(root.right, targetSum)
-
-        
-        print(count, 'final answer')
-        return count
-
-
-
-
-
-        
 if __name__ == "__main__":
-    root = [1,-2,-3,1,3,-2,None,-1]
-    targetSum = -1
+    root = [0,1,0]
+    targetSum = 1
     answer = Solution()
     answer.pathSum(list_to_tree(root), targetSum)
 
