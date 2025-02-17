@@ -15,95 +15,67 @@ class TreeNode:
         result+='TreeNode{val:'+str(self.val) +',Left:'+str_left + ',Right:'+ str_right
         return result
 
-    
     # equals function
     def __eq__(self,other):
         if not isinstance(other, TreeNode):
             return False # other object is not even the same type of object
         return id(self) == id(other) 
-
-
-def list_to_tree(lst):
-    if not lst:
-        return None
     
-    root = TreeNode(lst[0])
-    queue = deque([root])
-    i=1
-    while queue and i < len(lst):
-        node = queue.popleft()
-        if lst[i] is not None and i < len(lst):
-            node.left = TreeNode(lst[i])
-            queue.append(node.left)
-            i+=1
-        else:
-            i+=1
-        if i < len(lst):
-            if lst[i] is not None:
-                node.right = TreeNode(lst[i])
-                queue.append(node.right)
+
+    # turn a list to a binary tree in BFS
+    @staticmethod
+    def list_to_tree(lst):
+        
+        if not lst:
+            return None
+        
+        root = TreeNode(lst[0])
+        queue = deque([root])
+        i=1
+        while queue and i < len(lst):
+            node = queue.popleft()
+            if lst[i] is not None and i < len(lst):
+                node.left = TreeNode(lst[i])
+                queue.append(node.left)
                 i+=1
             else:
                 i+=1
-    # print(root)
-    return root 
+            if i < len(lst):
+                if lst[i] is not None:
+                    node.right = TreeNode(lst[i])
+                    queue.append(node.right)
+                    i+=1
+                else:
+                    i+=1
+        # print(root)
+        return root 
 
-    
+    # find a node of given value in a Tree
+    @staticmethod
+    def find_node(root, value):
+        stack = [root]
+        while stack:
+            node = stack.pop()
+            if node:
+                if node.val == value:
+                    return node
+                stack.append(node.right)
+                stack.append(node.left)
+        return None
+
+
 
 class Solution:
-    def longestZigZag(self,root: Optional[TreeNode]) -> int:
-        """
-        Algo:
-        - this task is similar to finding the prefix sum
-        - we can walk down the tree with each of the nodes as root and find the longest path seen across the walks.
-        - to optimize, we need a way to reduce the number of walks or get the answer in one walk if possible 
-        """
-        validPathLength = 0
-        # directions = {'right':'left', 'left':'right'}
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
         
-        if not root:
-            return 0
-        
-        #helper function for traversing the tree
-        def treeWalk(node:TreeNode, direction:str, currentPathLength:int):
-            
-            if not node:
-                print('\n none NODE')
-                return
-            print('examining', node.val, 'current path length is ', currentPathLength, 'direction got ', direction)
-            nonlocal validPathLength
-            if direction=='left' and node.right:
-                currentPathLength+=1
-                print('we can go right and length is now', currentPathLength)
-                treeWalk(node.right,'right',currentPathLength)
-            
-            #lets also traverse left node but reset the curentpath to 0
-            if direction=='left' and node.left:
-                treeWalk(node.left, 'left', 1)
-            if direction=='right' and node.left:
-                currentPathLength+=1
-                print('we can go left and length is now', currentPathLength)
-                treeWalk(node.left, 'left',currentPathLength)
-            #lets also traverse right node but reset the curentpath to 0
-            if direction=='right' and node.right:
-                treeWalk(node.right, 'right', 1)
-
-            
-            
-            validPathLength = max(currentPathLength, validPathLength)
-            print('stack POPPED , validPathLength is now\n', validPathLength)
-            print('left node is ', node.left, 'right is ', node.right)
-
-        
-        treeWalk(root.left,'left', 1)
-                
-        treeWalk(root.right, 'right',1)
-        print(validPathLength)
-
+        print('P\n',p, 'q\n',q, 'root \n',root)
         
 if __name__ == "__main__":
-    root = [1,None,2,3,4,None,None,5,6,None,7,None,None,None,8]
     answer = Solution()
-    answer.longestZigZag(list_to_tree(root))
+    root = TreeNode.list_to_tree([3,5,1,6,2,0,8,None,None,7,4])
+    p = TreeNode.find_node(root, 5)
+    
+    q = TreeNode.find_node(root,1)
+    answer.lowestCommonAncestor(root, p, q)
 
          
