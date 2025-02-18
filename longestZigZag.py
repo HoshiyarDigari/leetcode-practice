@@ -20,7 +20,9 @@ class TreeNode:
         if not isinstance(other, TreeNode):
             return False # other object is not even the same type of object
         return id(self) == id(other) 
-    
+    # define a hash function 
+    def __hash__(self):
+        return hash((self.val, self.left, self.right))  # Tuple of immutable attributes
 
     # turn a list to a binary tree in BFS
     @staticmethod
@@ -52,7 +54,7 @@ class TreeNode:
 
     # find a node of given value in a Tree
     @staticmethod
-    def find_node(root, value):
+    def find_node_iterative(root, value):
         stack = [root]
         while stack:
             node = stack.pop()
@@ -63,19 +65,79 @@ class TreeNode:
                 stack.append(node.left)
         return None
 
+    @staticmethod
+    def find_node_recursive(root, value):
+        if not root:
+            return None
+        if root.val == value:
+            return root
+        leftSearch = TreeNode.find_node_recursive(root.left, value)
+        if leftSearch:
+            return leftSearch
+        rightSearch = TreeNode.find_node_recursive(root.right, value)
+        
+        if rightSearch:
+            return rightSearch
+        return None
 
 
 class Solution:
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        """
+        Algo:
+        - walk down the tree and keep a note of the ancestors of current node
+        - if current node is p or q , save the current ancestors for them
+        - when both p and q ancestors are know, stop the walk
+        - find the common ancestors and return the latest one
+
+        """
+        pAncestors, qAncestors,currentAncestors = list(), list(), list()
+
+        def ancestorFinder(node, p, q, currentAncestors):
+            if not node:
+                return 
+            currentAncestors.append(node)
+            nonlocal pAncestors, qAncestors
+            if node == p:
+                pAncestors = currentAncestors.copy()
+                if qAncestors:
+                    return
+                #print('\np' ,pAncestors)
+            if node == q:
+                qAncestors = currentAncestors.copy()
+                if pAncestors:
+                    return
+                #print('\nq',qAncestors)
+
+            ancestorFinder(node.left, p, q, currentAncestors)
+            ancestorFinder(node.right, p, q, currentAncestors)
+            # remove node when backtracking
+            currentAncestors.remove(node)
+            
+
+        ancestorFinder(root,p, q, currentAncestors)
+        print('\n p ', pAncestors, '\nq', qAncestors)
+        # compare the lists
+        LCA = TreeNode() 
+        list_pAncestors = pAncestors
+        pAncestors = set(pAncestors)
+        qAncestors = set(qAncestors)
+        common_ancestors = pAncestors & qAncestors
+        for ancestor in reversed(list_pAncestors):
+            if ancestor in common_ancestors:
+                LCA = ancestor
+                break
+            
         
-        print('P\n',p, 'q\n',q, 'root \n',root)
+        print('\n LCA IS ',LCA)
+        return LCA
         
 if __name__ == "__main__":
     answer = Solution()
     root = TreeNode.list_to_tree([3,5,1,6,2,0,8,None,None,7,4])
-    p = TreeNode.find_node(root, 5)
+    p = TreeNode.find_node_recursive(root, 5)
     
-    q = TreeNode.find_node(root,1)
+    q = TreeNode.find_node_recursive(root,4)
     answer.lowestCommonAncestor(root, p, q)
 
          
