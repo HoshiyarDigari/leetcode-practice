@@ -6,8 +6,9 @@ class TreeNode:
         self.val = val
         self.left = left
         self.right = right
-    #repr method for representing the node
     
+    
+    #repr method for representing the node
     def __str__(self):
         result=''
         str_left = str(self.left) 
@@ -21,7 +22,9 @@ class TreeNode:
         if not isinstance(other, TreeNode):
             return False # other object is not even the same type of object
         return id(self) == id(other) 
-
+    # we have a hash function too 
+    def __hash__(self):
+        return hash(self.val, self.right, self.left)
 
 def list_to_tree(lst):
     if not lst:
