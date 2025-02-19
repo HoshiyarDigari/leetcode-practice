@@ -59,12 +59,36 @@ class Solution:
         Goal:
         Find all the nodes at the right end of each level in the binary tree
         Algo:
+        - make a list of nodes at each level from left to right.
+        - we have to return the last node of each level queue
         
         """
-        pass
+        #lets implement basic BFS to start
+        queue = deque([root])
+        level = 0
+        rightView = []
+        while queue:
+            level_size = len(queue) # as we come into the while , we should process all items added in previous whiles
+            print('there are ', level_size, 'nodes at level', level)
+            for i in range(level_size):
+                node = queue.popleft()
+                if i+1 == level_size:
+                    rightView.append(node.val)
+                if node:
+                    print('\n ', node.val, 'level', level)
+                    if node.left:
+                        queue.append(node.left)
+                    if node.right:
+                        queue.append(node.right)
+            level+=1 
+        
+        print(rightView)
+            
+
+        
         
 if __name__ == "__main__":
-    root = [1,None,2,3,4,None,None,5,6,None,7,None,None,None,8]
+    root = [1,2,3,None,5,None,4]
     answer = Solution()
     answer.rightSideView(list_to_tree(root))
 
