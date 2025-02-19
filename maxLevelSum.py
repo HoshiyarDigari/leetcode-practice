@@ -58,12 +58,44 @@ class Solution:
         """
         Goal:
         Find the level with nodes that have the max sum among all levels
+        Algo:
+        we just keep count of levels and add the nodes at each level
+        we just solved the rightsideview problem keeping track of each level nodes
         """
+        # if no level, we return 0
+        if not root:
+            return 0
+        
+        maxLevelSum = float('-inf')
+        levels_with_maxSum = 0
+        queue = deque([root])
+        level = 1
+        while queue:
+            level_size = len(queue)
+            levelSum = 0
+            print('\n we are at level', level)
+            for i in range(level_size):
+                node = queue.popleft()
+                if node:
+                    levelSum+=node.val
+                    if node.left:
+                        queue.append(node.left)
+                    if node.right:
+                        queue.append(node.right)
+            if levelSum > maxLevelSum:
+                print('found greater sum at level', level, 'before it was ', maxLevelSum, 'it is now', levelSum)
+                maxLevelSum = levelSum
+                levels_with_maxSum = level
+
+            
+            level+=1
+            
+        print(levels_with_maxSum)        
         
         
         
 if __name__ == "__main__":
-    root = [1,7,0,7,-8,None,None]
+    root = [-100,-200,-300,-20,-5,-10,None]
     answer = Solution()
     answer.maxLevelSum(list_to_tree(root))
 
