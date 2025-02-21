@@ -54,26 +54,92 @@ def list_to_tree(lst):
     
 
 class Solution:
-    def deleteNode(self,root: Optional[TreeNode], val:int) -> Optional[TreeNode]:
+    def deleteNode(self,root: Optional[TreeNode], key:int) -> Optional[TreeNode]:
         """
-        Goal:
-        find the node whose value equals the key
+        Algo:
+        - find the node whose value equals the key, keep track of the parent as well.
+        - edge cases
+            when root is to be deleted
+            empty tree
+            value not in tree
         if found, replace it with one of its child
         transfer other child to the 'child' that replaced the node
+        details:
+        -promote left child to the deleted Node's place. If no left child, promote right child.
+        - if left and right exists, then we need to insert the right child to the newly promoted sibling(left child) at the right place.
+        - we insert it in the right subtree leaf right node.
+
         """
-        previous = root # keep track of parent node, whose pointer needs to be updated
-        # search function 
-        queue = deque([root])
-        while queue:
-            node = queue.popleft()
-            if node:
-                if node.val == key:
-                    print('target node is ', node)
-                    return node
-            if node.left:
-                queue.append(node.left)
-            if node.right:
-                queue.append(node.right)
+        # empty tree
+        if not root:
+            return None
+        
+        parent = root # keep track of parent of the node being evaluated
+        toDelete = None
+        side = None # keep track of which side of the parent needs to be updated
+        temp = root
+        while temp:
+            if temp.val == key:
+                toDelete = temp
+                break
+            elif key > temp.val:
+                parent = temp
+                temp = temp.right
+                side = 'right'
+                
+            else:
+                parent = temp
+                temp = temp.left
+                side = 'left'
+                
+            
+        # if the node doesn't exist, we return the current root as we have nothing to delete
+        print('todelete is', toDelete, '\n parent is ', parent.val, 'side is ', side)
+        if not toDelete:
+            return root
+        
+        #special case where root is to be deleted
+        if toDelete == root:
+            print('root needs deleting')
+        
+            # make leftsubtree the root
+            temp = root.right
+            if root.left:
+                root = root.left
+            else: 
+                return root.right # there is no left child, so return the right one
+            if temp:
+                self.insertNode(root, temp, 'right')
+
+        else:
+            if toDelete.left:
+                setattr(parent, side, toDelete.left)
+            else:
+                setattr(parent, side, toDelete.right)
+                return root
+            if toDelete.right:
+                self.insertNode(toDelete.left, toDelete.right, 'right' )
+        #print(setattr(parent, side, toDelete.left))
+        print(root)
+
+    def insertNode(self,root:TreeNode, node:TreeNode, side:'str'):
+        """
+        function inserts the node into the root   into the root BST as a child of the given side
+        """
+        print('\n insert ', node , '\n into ', root, 'on the ' , side)
+        other_side = 'right' if side == 'left' else 'left'
+        if not getattr(root, side): # if there is not a subtree, we simply add the other side
+            setattr(root, side, node)
+            return
+        temp = getattr(root,other_side)
+        #get the right leaf node 
+        while getattr(temp, side):
+            temp = getattr(temp, side)
+        #insert the node 
+        setattr(temp, side, node)
+        return 
+    
+            
 
 
 
@@ -83,8 +149,9 @@ class Solution:
         
 if __name__ == "__main__":
     root = [5,3,6,2,4,None,7]
-    key =3
+
+    key = 7
     answer = Solution()
-    answer.deleteNode(list_to_tree(root),3)
+    answer.deleteNode(list_to_tree(root),key)
 
          
