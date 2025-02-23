@@ -55,7 +55,29 @@ def list_to_tree(lst):
 
 class Solution:
     def canVisitAllRooms(self, rooms: list[list[int]]) -> bool:
-        print(rooms)
+        """
+        Algo:
+        1. visit room 0
+        2. if there is at least one room key, visit that room
+        3. pick up keys if any and visit other rooms
+        4. when all rooms are visited or no more keys left , we are done
+        """
+        canVisit = [0]
+        visitedRooms = {0}
+        while canVisit:
+            print('we are visiting room', canVisit[-1])
+            keys = rooms[canVisit.pop()]
+            print('this room has keys', keys, 'and visited rooms so far', visitedRooms)
+            if keys:
+                for key in keys:
+                    if key not in visitedRooms:
+                        canVisit.append(key)
+                        print('added ', key, 'to ', canVisit)
+                        visitedRooms.add(key)
+        print( len(rooms)==len(visitedRooms))
+
+        
+
             
 
 
@@ -65,7 +87,7 @@ class Solution:
         
         
 if __name__ == "__main__":
-    rooms = [[4],[3],[],[2,5,7],[1],[],[8,9],[],[],[6]]
+    rooms = [[1],[2],[3],[]]
 
     key = 7
     answer = Solution()
