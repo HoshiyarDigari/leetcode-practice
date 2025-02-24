@@ -56,18 +56,57 @@ def list_to_tree(lst):
 class Solution:
     def findCircleNum(self, isConnected: list[list[int]]) -> int:
         """
+        Goal:
+        this is an application of the union find algorithm.
+        We have to find all the disjoint sets of connections.
+        Algo:
+        - we keep a parent list, that tracks the parent of each of the nodes.
+        - all nodes have same weightage, so when we find two nodes are connected, we can make any one as the parent.
+        - after we have found parent of each node, we look at all the parents to get our sets. 
+
         """
-        n = len(isConnected[0])
-        connected = []
-        for i in range(n):
-            print('checking the ', i , 'th list', isConnected[i])
-            for j in range(n):
-                #if i != j:
-                    if isConnected[i][j] == 1:
-                        print(i, j, 'are connected')
-                        connected.append({i,j})
-        print('there are ', connected, 'provinces')
+        n = len(isConnected)
+        parent = [x for x in range(n)] # start with each node as its own parent
+        print('input is ', n , 'long and parent list is ', parent)
+        rank = [0]*n # start with 0 ranking for each 
+
+        def find(node):
+            if parent[node] == node: #base case
+                return node
+            parent[node] = find(parent[node]) # find the ultimate parent recursively and update 
+            return parent[node]
         
+
+        def union(node1, node2):
+            root1 = find(node1)
+            root2 = find(node2)
+
+            if root1 == root2 : #both are in same set so nothting to do
+                return 
+            if rank[root1]<rank[root2]:
+                parent[root1] = root2
+            elif rank[root1] > rank[root2]:
+                parent[root2] = root1
+            else:
+                parent[root2] = root1
+                rank[root1]+=1 
+
+
+        
+        # process the input matrix
+        for i in range(n):
+            for j in range(i+1,n):
+                
+                if isConnected[i][j] == 1:
+                    print(i,j , 'connected')
+                    union(i,j)
+                    print(parent, 'updated')
+
+                    
+                
+        #check the parents list to find how many unique parents we have now
+        numberProvinces = len(set(find(x) for x in range(n)))
+        print(numberProvinces)
             
 
 
@@ -76,7 +115,22 @@ class Solution:
         
         
 if __name__ == "__main__":
-    isConnected = [[1,0,0,1],[0,1,1,0],[0,1,1,1],[1,0,1,1]]
+    isConnected = [
+    [1,1,0,0,0,0,0,1,0,0,0,0,0,0,0],
+    [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,1,0,1,1,0,0,0,0,0,0,0,0],
+    [0,0,0,0,1,0,0,0,0,1,1,0,0,0,0],
+    [0,0,0,1,0,1,0,0,0,0,1,0,0,0,0],
+    [0,0,0,1,0,0,1,0,1,0,0,0,0,1,0],
+    [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0],
+    [0,0,0,0,0,0,1,1,1,0,0,0,0,1,0],
+    [0,0,0,0,1,0,0,0,0,1,0,1,0,0,1],
+    [0,0,0,0,1,1,0,0,0,0,1,1,0,0,0],
+    [0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+    [0,0,0,0,0,0,1,0,1,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,1,0,0,0,0,1]]
 
     key = 7
     answer = Solution()
