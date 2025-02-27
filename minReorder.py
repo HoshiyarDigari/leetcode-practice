@@ -70,9 +70,19 @@ class Solution:
             adj_matrix[connection[0]].append(connection[1])
             adj_matrix[connection[1]].append(temp)
         print('the adjacency matrix is ',adj_matrix)
+        # the adjacencies of 0 can directly reach it,we flip these in connections if any
+        reversals = 0
+        for neighbor in adj_matrix[0]:
+            step = [neighbor,0]
+            if step not in connections:
+                    connections.append(step)
+                    connections.remove([step[1],step[0]])
+                    reversals +=1
+                
         
         #find the paths to node 0 using BFS, and returns if any reversals is needed in connections for that path 
         def countReversals(start):
+            
             predecessors = {}
             visited = []
             queue = deque([start])
@@ -91,7 +101,7 @@ class Solution:
                         predecessors.update({adj_matrix[node][i]:node}) 
         
             temp = 0 
-            reversals =0
+            reversals = 0
             while temp!=start:
                 step = [predecessors[temp],temp]
                 # if this step is not in connections, we must have a reverse of that in connections. lets update this new route in connections
@@ -106,7 +116,7 @@ class Solution:
             
 
 
-        reversals = 0                            
+                                   
         for i in range(1,n):
             reversals+=countReversals(i)
         print('reversals done', reversals)
