@@ -67,9 +67,8 @@ class Solution:
         
         """
         # the membership checks in connections list is costly, lets have a set instead for checking memberships
-        connections_set= set()
-        for connection in connections:
-            connections_set.add(tuple(connection))
+        connections_set= set(tuple(connection) for connection in connections)
+        
         # adjacency matrix 
         adj_matrix = {x:[] for x in range(n)}
         for connection in connections:
@@ -95,8 +94,6 @@ class Solution:
                     queue.append(neighbor)
                     step_tuple = (neighbor, current_node)
                     if step_tuple not in connections_set: # if step is not in connections, its reverse must be in connections thats why we have this edge in adj matrix.
-                        connections_set.add(step_tuple)
-                        connections_set.remove((step_tuple[1],step_tuple[0]))
                         reversals+=1
                         print('reversal done for step', step_tuple, reversals)
         print('total reversals done', reversals)
