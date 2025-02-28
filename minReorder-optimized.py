@@ -78,19 +78,20 @@ class Solution:
         #print('the adjacency matrix is ',adj_matrix)
         # the adjacencies of 0 can directly reach it,we flip these in connections if any
         reversals = 0
-        visited = set()
+        visited = {0}
         # we will visit neighbors of 0, and then neighbors of 0's neighbors and so on , till we have visited all the nodes
 
         queue = deque([0])
         while queue:
             current_node = queue.popleft()
-            visited.add(current_node)
+            
 
             print('current node is ', current_node)
             for neighbor in adj_matrix[current_node]:
                 print('examing the neighbor', neighbor)
                 if neighbor not in visited:
                     print('it has not been visited yet', visited)
+                    visited.add(neighbor)
                     queue.append(neighbor)
                     step_tuple = (neighbor, current_node)
                     if step_tuple not in connections_set: # if step is not in connections, its reverse must be in connections thats why we have this edge in adj matrix.
