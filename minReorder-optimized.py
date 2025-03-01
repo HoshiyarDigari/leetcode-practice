@@ -67,14 +67,19 @@ class Solution:
         
         """
         # the membership checks in connections list is costly, lets have a set instead for checking memberships
-        connections_set= set(tuple(connection) for connection in connections)
-        
-        # adjacency matrix 
-        adj_matrix = {x:[] for x in range(n)}
+        # connections_set= set(tuple(connection) for connection in connections)
+
+        # we will create an incoming adj dict that will store the neighbors who have roads leading to a node
+        incoming_neighbors = {x:set() for x in range(n)}
+        for connection in connections:
+            incoming_neighbors[connection[1]].add(connection[0])
+        print('incoming adjacency is ', incoming_neighbors)
+        # adjacency list 
+        adj_matrix = {x:set() for x in range(n)}
         for connection in connections:
             temp = connection[0]
-            adj_matrix[connection[0]].append(connection[1])
-            adj_matrix[connection[1]].append(temp)
+            adj_matrix[connection[0]].add(connection[1])
+            adj_matrix[connection[1]].add(temp)
         #print('the adjacency matrix is ',adj_matrix)
         # the adjacencies of 0 can directly reach it,we flip these in connections if any
         reversals = 0
@@ -93,10 +98,16 @@ class Solution:
                     print('it has not been visited yet', visited)
                     visited.add(neighbor)
                     queue.append(neighbor)
+                    # use the incoming neighbors list to find reversal required or not
+                    if neighbor not in incoming_neighbors[current_node]:
+                        reversals+=1
+                        print('reversal done as ', neighbor , 'dont have a way to ', current_node)
+                    """
                     step_tuple = (neighbor, current_node)
                     if step_tuple not in connections_set: # if step is not in connections, its reverse must be in connections thats why we have this edge in adj matrix.
                         reversals+=1
                         print('reversal done for step', step_tuple, reversals)
+                    """
         print('total reversals done', reversals)
 
 
