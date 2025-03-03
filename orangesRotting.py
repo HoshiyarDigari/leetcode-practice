@@ -27,7 +27,9 @@ class Solution:
         while queue and fresh:
             print('entering while, the queue is', queue, '\n fresh is ', fresh)
             current_rottens = queue.popleft()
+            print('queue after pop', queue)
             print('current rottens are ', current_rottens)
+            future_rottens=[] # this will hold the next batch of rotten oranges
             for rotten in current_rottens:
                 #check the neighbors of this rotten orange
                 neighbors = [(rotten[0]-1,rotten[1]), (rotten[0]+1,rotten[1]), (rotten[0],rotten[1]-1), (rotten[0],rotten[1]+1)]
@@ -38,9 +40,11 @@ class Solution:
                 0<=neighbor[1]<grid_columns and
                 neighbor in fresh):
                         print('neighbor rotted', neighbor)
-                        queue.append([neighbor])
+                        future_rottens.append(neighbor)
+                        
                         fresh.remove(neighbor)
-            
+            if future_rottens:
+                queue.append(future_rottens)
             minutes+=1
             print('minutes now is ', minutes)
         if not fresh:
