@@ -14,13 +14,41 @@ class Solution:
         grid_rows= len(grid)
         grid_columns = len(grid[0])
         #we store sets of fresh and rotten oranges
-        rotten = {(x,y) for x in range(grid_rows) for y in range(grid_columns) if grid[x][y]==2}
+        rottens = {(x,y) for x in range(grid_rows) for y in range(grid_columns) if grid[x][y]==2}
         fresh = {(x,y) for x in range(grid_rows) for y in range(grid_columns) if grid[x][y]==1}
-
-        #BFS queue will be a list of lists that start with current rotten cells
-        queue = deque([rotten])
-        print(queue)
+        if not fresh:
+            return 0 #there are no fresh oranges to rot
         
+        #BFS queue will be a list of lists that start with current rotten cells
+        queue = deque()
+        queue.append([x for x in rottens])
+        
+        minutes = 0
+        while queue and fresh:
+            print('entering while, the queue is', queue, '\n fresh is ', fresh)
+            current_rottens = queue.popleft()
+            print('current rottens are ', current_rottens)
+            for rotten in current_rottens:
+                #check the neighbors of this rotten orange
+                neighbors = [(rotten[0]-1,rotten[1]), (rotten[0]+1,rotten[1]), (rotten[0],rotten[1]-1), (rotten[0],rotten[1]+1)]
+                print(rotten, 'neighbors are', neighbors)
+                for neighbor in neighbors:
+                    if (
+                0<=neighbor[0]<grid_rows and
+                0<=neighbor[1]<grid_columns and
+                neighbor in fresh):
+                        print('neighbor rotted', neighbor)
+                        queue.append([neighbor])
+                        fresh.remove(neighbor)
+            
+            minutes+=1
+            print('minutes now is ', minutes)
+        if not fresh:
+            return minutes
+        else:
+            return -1 # there are fresh oranges left after BFS processing
+                        
+                
         
 if __name__ == "__main__":
     solution=Solution()
@@ -32,3 +60,10 @@ if __name__ == "__main__":
     assert result == 4
 
     #test2
+    grid = [[2,1,1],[0,1,1],[1,0,1]]
+    assert solution.orangesRotting(grid) == -1
+
+
+    #test 3
+    grid =[[0,2]]
+    assert solution.orangesRotting(grid) == 0
