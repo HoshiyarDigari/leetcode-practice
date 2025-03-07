@@ -9,7 +9,7 @@ class Solution:
         negative_nums = [-x for x in nums]
         heapq.heapify(negative_nums)
         #we pop elements till we hit the kth element
-        for i in range(1,k-1):
+        for i in range(k-1):
             heapq.heappop(negative_nums)
         print(negative_nums)
         #return the element at the top now but negate it again to get original value
@@ -19,4 +19,4 @@ if __name__ == "__main__":
     #test case 1
     nums = [3,2,1,5,6,4]
     k = 3
-    assert Solution.findKthLargest(nums,k) == 5
+    assert Solution.findKthLargest(nums,k) == 4
