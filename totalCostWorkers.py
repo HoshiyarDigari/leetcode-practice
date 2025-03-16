@@ -5,40 +5,36 @@ class Solution:
         """
         Algo:
         1. create two minheaps front and back that contain candidates workers
-        2. Each round peek at the heaps and take the smaller one, if tie front one is selected
-        3. remove the selected element from the original list
+        2. use two pointer front worker and backWorker to track indexes that have been interviewed
+        3. Each round peek at the heaps and take the smaller one, if tie front one is selected
         4. if there are more unheaped items, add to the heap from which worker was selected
         """
         #create heaps
-        workers_interviewed = set()
+        #workers_interviewed = set()
         workers_hired = 0
         total_workers = len(costs)
         total_cost = 0
         frontHeap , backHeap = [],[]
+        front_worker = 0
+        back_worker = total_workers-1
         def add_workers(heap_type):
-            print('adding workers to', workers_interviewed)
+            nonlocal front_worker, back_worker
             if heap_type == 'front':
-                print('adding to front heap', frontHeap)
-                i=0
-                while len(frontHeap)<candidates and len(workers_interviewed)!=total_workers:
-                    print('checking index', i , 'lenght of front heap is' , len(frontHeap), 'and candidates are', candidates)
-                    if i not in workers_interviewed:
-                        print(i, 'not in workers interviewed', workers_interviewed)
-                        heapq.heappush(frontHeap, costs[i])
-                        print('front heap updated to ', frontHeap)
-                        workers_interviewed.add(i)
-                    i+=1
+                
+                while len(frontHeap)<candidates and front_worker <= back_worker:
+                    print('checking index', front_worker , 'the front heap is ', frontHeap)
+                    heapq.heappush(frontHeap, costs[front_worker])
+                    front_worker+=1
+                print('front worker pointer is at ', front_worker)
             elif heap_type == 'back':
-                i=total_workers-1
-                while len(backHeap)<=k and len(workers_interviewed)<=total_workers and i>0:
-                    print('checking index', i)
-                    if i not in workers_interviewed:
-                        print(i, 'not in workers interviewed', workers_interviewed)
-                        heapq.heappush(backHeap, costs[i])
-                        print('back heap updated to ', backHeap)
-                        workers_interviewed.add(i)
-                    i-=1
-            print('workers now', workers_interviewed, frontHeap, backHeap)
+                while len(backHeap)< candidates and back_worker>=front_worker:
+                    print('checking index', back_worker , 'the back heap is ', backHeap)
+
+                    heapq.heappush(backHeap, costs[back_worker])        
+                    back_worker-=1
+                    print('back worker pointer is at ', back_worker)
+
+           
         add_workers('front')
         add_workers('back')   
         print('################# INITIALIZED\n',frontHeap, backHeap)
@@ -79,4 +75,4 @@ class Solution:
 
 assert Solution.totalCostWorkers([17,12,10,2,7,2,11,20,8],3,4) == 11
 assert Solution.totalCostWorkers([1,2,4,1],3,3) == 4
-
+assert Solution.totalCostWorkers([31,25,72,79,74,65,84,91,18,59,27,9,81,33,17,58],11,2)==423
