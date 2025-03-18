@@ -4,8 +4,9 @@ class Solution:
         """
         Algo:
         - for each spell, we have to multiply with every potion and check if the product is more than the success number
-        - we can reduce it to a lookup instead by getting the least multiplier , success//spell. this way it is a lookup problem
+        - we can reduce it to a lookup instead by getting the least multiplier , success/spell. this way it is a lookup problem
         - if we sort the potions list then , we can easily find the number of potiopns greater than the multiplier we need
+        - we implement a dictionary to avoid duplicating checks for the duplicate spells 
         """
         total_potions = len(potions)
         answer = []
@@ -14,51 +15,33 @@ class Solution:
         spell_success_counts = {} # map of spell and its success number so we can save on repeating calculations for duplicate spells
 
         for spell in spells:
-            target = success / spell
-            current_pair= 0
-            start, end = 0, total_potions -1 
-            print('checking for spell ', spell, 'with target', target, 'start and ends are ', start, end)
-            # we have to find the index that has the number that is bigger than or equal to target, the success pairs will be all numbers from this index to the end
-            break_occurred = False  # track if while exited due to a break
-            while( spell not in spell_success_counts.keys()):
+            
+            if (spell not in spell_success_counts.keys()):
+                target = success / spell
                 if potions[-1] < target:
-                    break_occurred = True
-                    break
+                    spell_success_counts.update({spell:0})
+                    answer.append(0)
                 elif potions[0] >= target:
-                    current_pair = total_potions
-                    break_occurred = True
-                    break
-                mid = (start + end) // 2 
-                if mid < 0:
-                    print('breaking out mid less than 0', mid)
-                    break_occurred = True
-                    break
-                print('mid is now', mid)
-                if potions[mid] < target : # we have to move right
-                    print('mid is smaller than target')
-                    if potions[mid+1] > target:
-                        current_pair = total_potions - (mid + 1)
-                        print('breaking out as mid+1 is bigger than target')
-                        break_occurred = True
-                        break
-                    start = mid + 1
-                    print('start is updated to ', start)
-                elif potions[mid] >= target: # we have to move left
-                    print('mid is larger than target')
-
-                    if potions[mid -1 ] < target:
-                        current_pair = total_potions - (mid)
-                        print('breaking out as mid-1 is smaller than target')
-                        break_occurred = True
-
-                        break
-                    end = mid - 1
-            if break_occurred == True:
-                spell_success_counts.update({spell:current_pair})
-                answer.append(current_pair)
+                    spell_success_counts.update({spell:total_potions})
+                    answer.append(total_potions)
+                else:
+                    start, end = 0, total_potions -1 
+                    insertion_point = total_potions # critical because we want to find the leftmost index where target can be inserted without disturbing the sorted order
+                    while (start<=end):
+                        mid = (start + end) // 2 
+                        if potions[mid] >= target: # we have to move left
+                            insertion_point = mid
+                            end = mid - 1  
+                        else: # we have to move right
+                            start = mid + 1
+                        
+                    count = total_potions- insertion_point
+                    spell_success_counts.update({spell:count})
+                    answer.append(count)
             else:
                 answer.append(spell_success_counts[spell])
-
+            
+        print(answer)
         return answer
 
 spells = [36,36,22,11,35,21,4,25,30,35,31,10,8,39,7,22,18,9,23,30,9,37,22,7,36,40,17,37,38,27,6,15,1,15,7,31,36,29,9,15,3,37,15,17,25,35,9,21,5,17,25,8,18,25,7,19,4,33,9,5,29,13,9,18,5,10,31,6,7,24,13,11,8,19,2]
