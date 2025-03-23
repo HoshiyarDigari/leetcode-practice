@@ -16,8 +16,8 @@ class Solution:
                     undo_choice(choice,state)
         defining is_valid choice is the main bulk of the algorithm
         """
-        def is_solution(current_sum):
-            if current_sum == n:
+        def is_solution(current_sum, position):
+            if current_sum == n and position ==k:
                 return True
             return False
         
@@ -27,8 +27,8 @@ class Solution:
                 return False
                 
         def backtrack(numbers_selected,current_sum, combinations, position):
-        
-            if is_solution(current_sum):
+            # we have to pass position -1 as we get that position only after we add our choice to the numbers selected
+            if is_solution(current_sum, position-1):
                 combinations.append(numbers_selected[:])
                 return
             # we also stop recursion if we have exceeded k positions
