@@ -1,6 +1,6 @@
 import time, math
 class Solution:
-    def combinationSum3(self, k: int, n: int) -> list[list[int]]:
+    def combinationSum3( k: int, n: int) -> list[list[int]]:
         """
         Algo:
         we will use the general backtracking template as below
@@ -16,27 +16,34 @@ class Solution:
                     undo_choice(choice,state)
         defining is_valid choice is the main bulk of the algorithm
         """
-        if not digits:
-            return []
-        digitMap = {'2':('a', 'b', 'c'), '3':('d','e','f'), '4':('g','h','i'), '5':('j','k','l'), '6':('m','n','o'), '7':('p', 'q','r','s'), '8':('t','u','v'), '9':('w', 'x','y','z')}
         
-        def backtrack(state, combinations, index):
-            #if index exceeds the digits array, we have reached the depth of the tree and need to back track, this is the step that stops the recursion
-            if index== len(digits):
-                combinations.append(''.join(state))
+        def backtrack(numbers_selected,current_sum, combinations, position):
+
+            #if position exceeds k , we have to stop recursion
+            if position>k:
                 return
-            choices = [ x for x in digitMap[digits[index]]]
+            #if we have reached the requird sum, we add the numbers to combinations
+            
+            choices = [ x for x in range(1,10)]
             for choice in choices:
-                state.append(choice) #make choice
-                backtrack(state, combinations, index + 1)
-                #undo choice - backtrack
-                state.pop()
+                #check if this choice is valid as per constraints, we are not allowed to repeat the number
+                if choice not in numbers_selected:
+
+                    numbers_selected.append(choice) #make choice
+                    current_sum+=choice
+                    if current_sum == n:
+                        combinations.append(numbers_selected[:])
+                    backtrack(numbers_selected,current_sum, combinations, position + 1)
+                    #undo choice - backtrack
+                    current_sum-=numbers_selected.pop()
+                    
                 
     
-        index = 0
-        state = []
+        position = 1 #this will track each digit for the k numbers
+        numbers_selected = []
         combinations = []
-        backtrack(state,combinations, index)
+        current_sum = 0
+        backtrack(numbers_selected,current_sum, combinations, position)
         print(combinations)
         return combinations
 
