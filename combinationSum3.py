@@ -16,29 +16,36 @@ class Solution:
                     undo_choice(choice,state)
         defining is_valid choice is the main bulk of the algorithm
         """
+        def is_solution(current_sum):
+            if current_sum == n:
+                return True
+            return False
         
+        def is_valid_choice(choice, numbers_selected):
+                if choice not in numbers_selected:
+                    return True
+                return False
+                
         def backtrack(numbers_selected,current_sum, combinations, position):
-
-            #if position exceeds k , we have to stop recursion
+        
+            if is_solution(current_sum):
+                combinations.append(numbers_selected[:])
+                return
+            # we also stop recursion if we have exceeded k positions
             if position>k:
                 return
-            #if we have reached the requird sum, we add the numbers to combinations
-            
-            choices = [ x for x in range(1,10)]
             for choice in choices:
                 #check if this choice is valid as per constraints, we are not allowed to repeat the number
-                if choice not in numbers_selected:
-
+                if is_valid_choice(choice,numbers_selected):
                     numbers_selected.append(choice) #make choice
                     current_sum+=choice
-                    if current_sum == n:
-                        combinations.append(numbers_selected[:])
                     backtrack(numbers_selected,current_sum, combinations, position + 1)
                     #undo choice - backtrack
                     current_sum-=numbers_selected.pop()
                     
                 
     
+        choices = [ x for x in range(1,10)]   
         position = 1 #this will track each digit for the k numbers
         numbers_selected = []
         combinations = []
