@@ -29,8 +29,10 @@ class Solution:
         def backtrack(numbers_selected,current_sum, combinations, position):
             # we have to pass position -1 as we get that position only after we add our choice to the numbers selected
             if is_solution(current_sum, position-1):
-                combinations.append(numbers_selected[:])
-                return
+                #check if we have this solution but in a different order in combinations
+                if set(tuple(numbers_selected[:])) not in combinations:
+                    combinations.append(set(tuple(numbers_selected[:])))
+                    return
             # we also stop recursion if we have exceeded k positions
             if position>k:
                 return
@@ -51,6 +53,8 @@ class Solution:
         combinations = []
         current_sum = 0
         backtrack(numbers_selected,current_sum, combinations, position)
+        #change the sets to lists in combinations
+        combinations =[list(x) for x in combinations]
         print(combinations)
         return combinations
 
