@@ -77,6 +77,7 @@ class Solution:
                 visit_connections(city, isConnected, visited, total_cities)
                 provinces+=1
         return provinces
+
                 
         
         
@@ -98,7 +99,6 @@ if __name__ == "__main__":
     [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
     [0,0,0,0,0,0,1,0,1,0,0,0,0,1,0],
     [0,0,0,0,0,0,0,0,0,1,0,0,0,0,1]]
-
 
     answer = Solution()
     answer.findCircleNum(isConnected)
