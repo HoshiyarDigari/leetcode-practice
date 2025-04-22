@@ -56,27 +56,59 @@ def list_to_tree(lst):
 class Solution:
     def findCircleNum(self, isConnected: list[list[int]]) -> int:
         """
+        Goal:
+        this is an application of the union find algorithm.
+        We have to find all the disjoint sets of connections.
         Algo:
-        we want to do a depth first approach. We start at one city and explore all its connections and their connnections.
-        we add the cities to a visited list to keep track  and we stop when we have no more cities to visit 
-        """
-        visited= set() #track the visited cities
-        
-        def visit_connections(current, isConnected, visited, total_cities):
-            visited.add(current)
-            for other_city in range(len(isConnected)):
-                if isConnected[current][other_city] and other_city not in visited:
-                    visit_connections(other_city,isConnected,visited,total_cities)
-            return 
+        - we keep a parent list, that tracks the parent of each of the nodes.
+        - all nodes have same weightage, so when we find two nodes are connected, we can make any one as the parent.
+        - after we have found parent of each node, we look at all the parents to get our sets. 
 
-        provinces = 0
-        #start exploration
-        total_cities= len(isConnected[0])
-        for city in range(total_cities):
-            if city not in visited:
-                visit_connections(city, isConnected, visited, total_cities)
-                provinces+=1
-        return provinces
+        """
+        n = len(isConnected)
+        parent = [x for x in range(n)] # start with each node as its own parent
+        print('input is ', n , 'long and parent list is ', parent)
+        rank = [0]*n # start with 0 ranking for each 
+
+        def find(node):
+            if parent[node] == node: #base case
+                return node
+            parent[node] = find(parent[node]) # find the ultimate parent recursively and update 
+            return parent[node]
+        
+
+        def union(node1, node2):
+            root1 = find(node1)
+            root2 = find(node2)
+
+            if root1 == root2 : #both are in same set so nothting to do
+                return 
+            if rank[root1]<rank[root2]:
+                parent[root1] = root2
+            elif rank[root1] > rank[root2]:
+                parent[root2] = root1
+            else:
+                parent[root2] = root1
+                rank[root1]+=1 
+
+
+        
+        # process the input matrix
+        for i in range(n):
+            for j in range(i+1,n):
+                
+                if isConnected[i][j] == 1:
+                    print(i,j , 'connected')
+                    union(i,j)
+                    print(parent, 'updated')
+
+                    
+                
+        #check the parents list to find how many unique parents we have now
+        numberProvinces = len(set(find(x) for x in range(n)))
+        print(numberProvinces)
+            
+
 
                 
         
@@ -100,6 +132,7 @@ if __name__ == "__main__":
     [0,0,0,0,0,0,1,0,1,0,0,0,0,1,0],
     [0,0,0,0,0,0,0,0,0,1,0,0,0,0,1]]
 
+    key = 7
     answer = Solution()
     answer.findCircleNum(isConnected)
 
